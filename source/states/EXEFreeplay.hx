@@ -598,6 +598,14 @@ class EXEFreeplay extends MusicBeatState
 
 		if (changeCooldown <= 0 && !choosingSong && !maniaUnlock && !backend.BurningBot.burningLocked)
 		{
+			// R on the box screen picks a random song from the whole menu. Return right away:
+			// the same R press would otherwise also open the reset score prompt (controls.RESET).
+			if (FlxG.keys.justPressed.R)
+			{
+				pickRandomSong();
+				return;
+			}
+
 			var newSel = selectedBox;
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P)
 			{
@@ -665,6 +673,25 @@ class EXEFreeplay extends MusicBeatState
 
 		if ((controls.ACCEPT #if mobile || shortPress #end) && !maniaUnlock)
 			enterSelectedBox();
+	}
+
+	// Jumps to a random song out of every song listed in the menu (all boxes, not just
+	// the current one). Locked songs are not in songEntries, so they are never picked.
+	function pickRandomSong():Void
+	{
+		final pool:Array<Array<Int>> = [];
+		for (b in 0...songEntries.length)
+			for (s in 0...songEntries[b].songs.length)
+				pool.push([b, s]);
+		if (pool.length == 0) return;
+
+		final pick:Array<Int> = pool[FlxG.random.int(0, pool.length - 1)];
+
+		if (pick[0] != selectedBox) changeSelection(pick[0]);
+		enterSelectedBox();
+
+		final delta:Int = pick[1] - songSelector;
+		chooseSong(delta, delta != 0);
 	}
 
 	function enterSelectedBox():Void

@@ -115,6 +115,17 @@ class CameraStageHandler
 			},
 		};
 
+		// ---- endless-og ----
+		// Endless OG shares the majin stage with Endless US, so get() hands it these
+		// cues instead of the majin ones. One step is 96.77ms at 155 BPM.
+		_handlers['endless-og'] = {
+			onStepHit: function(cam:GameplayCamera, curStep:Int) {
+				// centre the camera at 1:02, back on the characters at 1:27, centre again at 2:17
+				if (curStep == 641 || curStep == 1416) { cam.settings.MiddleCamera = true;  cam.settings.OverrideZoom = false; }
+				if (curStep == 899)                    { cam.settings.MiddleCamera = false; cam.settings.OverrideZoom = false; }
+			},
+		};
+
 		// ---- exe ----
 		_handlers['exe'] = {
 			onSectionHit: function(cam:GameplayCamera, mustHit:Bool, curBeat:Int) {
@@ -174,6 +185,9 @@ class CameraStageHandler
 	public static function get(stage:String):Null<CameraCallbacks>
 	{
 		init();
+		// Endless OG uses the majin stage but has its own cues
+		if (stage == 'majin' && PlayState.instance != null && PlayState.instance.songName == 'endless-og')
+			return _handlers.get('endless-og');
 		return _handlers.get(stage);
 	}
 

@@ -400,7 +400,7 @@ class EXETitle extends MusicBeatState
 		#if !final
 		if (videoPlaying)
 		{
-			if (videoKey != 'introexe' && (controls.ACCEPT #if mobile || shortPress #end || (gamepad != null && gamepad.justPressed.START #if switch || gamepad.justPressed.B #end))) video?.setVideoPercent(1);
+			if (controls.ACCEPT #if mobile || shortPress #end || (gamepad != null && gamepad.justPressed.START #if switch || gamepad.justPressed.B #end)) video?.setVideoPercent(1);
 			super.update(elapsed);
 			return;
 		}

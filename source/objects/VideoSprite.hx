@@ -22,9 +22,7 @@ class VideoSprite extends FlxSpriteGroup
 	public static final ARG_HW_ACCEL:String = ':avcodec-hw=any';
 	public static final ARG_SW_DECODE:String = ':avcodec-hw=none';
 
-	// Software decoding by default: hardware decoding can show flashing colors instead of
-	// video on some PCs, and unlike a failed video it does not trigger the automatic fallback.
-	public static var forceSoftwareDecode:Bool = true;
+	public static var forceSoftwareDecode:Bool = false;
 
 	public static function softwareDecode():Bool
 		return forceSoftwareDecode || FlxG.save.data.videoSoftwareDecode == true;
